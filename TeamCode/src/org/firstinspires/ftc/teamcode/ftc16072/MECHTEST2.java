@@ -67,7 +67,8 @@ public class MECHTEST2 extends OpMode {
     if (leftrotate && rightrotate) {
             rotate = 0;
         } else {
-            if (leftrotate) {
+            if (leftrotate && rotatedegree <= 90) {
+                    rotate = -1;
 
             } else {
                 if (rightrotate) {
