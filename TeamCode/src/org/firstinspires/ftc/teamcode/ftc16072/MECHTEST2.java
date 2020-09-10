@@ -27,6 +27,26 @@ public class MECHTEST2 extends OpMode {
     }
 
 
+    BNO055IMU.Parameters params = new BNO055IMU.Parameters();
+
+    double startHeading = 0;
+    boolean previouspress = false;
+    boolean previouspressy = false;
+
+    // Always return the right side of the angle (i.e. always positive)
+    private double GetTurnedAngle(double currentHeading, double startHeading)
+    {
+        double LeftAngle = 0;
+        if (currentHeading < startHeading) {
+            LeftAngle = 360 - (startHeading - currentHeading);
+        } else {
+            LeftAngle = currentHeading - startHeading;
+        }
+        return LeftAngle;
+    }
+
+
+
     // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
@@ -35,22 +55,24 @@ public class MECHTEST2 extends OpMode {
         double rotate = 0;
         if (gamepad1.left_stick_y * -1 > 0.2) {
             forward = gamepad1.left_stick_y * -1; //The y direction on the gamepad is reversed idk why
-       }
+        }
         if (gamepad1.left_stick_y * -1 < -0.2) {
             forward = gamepad1.left_stick_y * -1; //The y direction on the gamepad is reversed idk why
-       }
-       if (gamepad1.left_stick_x > 0.2) {
+        }
+        if (gamepad1.left_stick_x > 0.2) {
             strafe = gamepad1.left_stick_x;
-       }
-       if (gamepad1.left_stick_x < -0.2) {
+        }
+        if (gamepad1.left_stick_x < -0.2) {
             strafe = gamepad1.left_stick_x;
-       }
-       if (gamepad1.right_stick_x > 0.2) {
-           rotate = gamepad1.right_stick_x;
-       }
+        }
+        if (gamepad1.right_stick_x > 0.2) {
+            rotate = gamepad1.right_stick_x;
+        }
         if (gamepad1.right_stick_x < -0.2) {
             rotate = gamepad1.right_stick_x;
-       }
+        }
+
+        double currentHeading = mecanumDrive.getHeading(AngleUnit.DEGREES);
 
         distances = mecanumDrive.getDistanceCm();
         telemetry.addData("distance fwd", distances[0]);
@@ -58,26 +80,50 @@ public class MECHTEST2 extends OpMode {
         telemetry.addData("forward", forward);
         telemetry.addData("strafe", strafe);
         telemetry.addData("rotate", rotate);
-        telemetry.addData("rotatedegree", mecanumDrive.getHeading(AngleUnit.DEGREES));
+        telemetry.addData("rotatedegree", currentHeading);
 
-    boolean leftrotate = gamepad1.x;
-    boolean rightrotate = gamepad1.b;
-    double rotatedegree = mecanumDrive.getHeading(AngleUnit.DEGREES);
 
-    if (leftrotate && rightrotate) {
+        boolean leftrotate = gamepad1.x;
+        boolean rightrotate = gamepad1.b;
+        double rotatedegree = mecanumDrive.getHeading(AngleUnit.DEGREES);
+        double turndegree = GetTurnedAngle(currentHeading, startHeading);
+
+        if (previouspress == false && leftrotate) {
+            startHeading = currentHeading;
+        }
+
+        if (previouspressy == false && rightrotate) {
+            startHeading = currentHeading;
+        }
+
+        if (leftrotate && rightrotate) {
             rotate = 0;
         } else {
-            if (leftrotate && rotatedegree <= 90) {
-                    rotate = -1;
-
+            if (leftrotate && turndegree <= 90) {
+                rotate = -0.5;
             } else {
-                if (rightrotate) {
 
+                // if we have not start the rotation, turn degree will  be 0. Need to start the turn
+                double rightrotatedegree = (turndegree==0 ? 0 :  360 - turndegree );
+
+                if (rightrotate &&  rightrotatedegree <= 90 ) {
+                    rotate = 0.5;
                 }
             }
+        }
+
+        mecanumDrive.driveMecanum(forward, strafe, rotate);
+        previouspress = gamepad1.x;
+        previouspressy = gamepad1.b;
+
+
+        telemetry.addData("leftrotate", leftrotate);
+        telemetry.addData("rightrotate", rightrotate);
+        telemetry.addData("turndegree", GetTurnedAngle(currentHeading, startHeading));
+        telemetry.addData("startheading", startHeading);
+        telemetry.addData("currentheading", currentHeading);
+
     }
 
-    mecanumDrive.driveMecanum(forward, strafe, rotate);
 
-    }
 }

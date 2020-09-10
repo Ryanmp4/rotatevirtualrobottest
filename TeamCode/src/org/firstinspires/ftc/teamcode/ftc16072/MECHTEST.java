@@ -68,15 +68,13 @@ public class MECHTEST extends OpMode {
             }
         }
 
-
-
         boolean dpadforward = gamepad1.dpad_up;
         boolean dpadback = gamepad1.dpad_down;
 
         if (dpadback && dpadforward) {
             mecanumDrive.driveMecanum(0, 0, 0);
         } else {
-            if (dpadforward) {
+            if (dpadforward ) {
                 mecanumDrive.driveMecanum(1,0,0);
             } else {
                 if (dpadforward) {

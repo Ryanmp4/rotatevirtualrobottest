@@ -53,7 +53,7 @@ class MecanumDrive {
         conversion = conversion.inverted();
     }
 
-    void init(HardwareMap hwMap) {
+    public void init(HardwareMap hwMap) {
         frontLeft = hwMap.get(DcMotor.class, "front_left_motor");
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight = hwMap.get(DcMotor.class, "front_right_motor");
@@ -70,6 +70,7 @@ class MecanumDrive {
         imu = hwMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters params = new BNO055IMU.Parameters();
         imu.initialize(params);
+
     }
 
     private void setSpeeds(double flSpeed, double frSpeed, double blSpeed, double brSpeed) {
@@ -125,5 +126,6 @@ class MecanumDrive {
 
     public String getHeading() {
         return  getHeading();
+
     }
 }
