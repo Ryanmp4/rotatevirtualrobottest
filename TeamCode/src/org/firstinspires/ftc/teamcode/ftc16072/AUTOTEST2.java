@@ -54,7 +54,6 @@ public class AUTOTEST2 extends LinearOpMode {
         colorSensor = hardwareMap.colorSensor.get("color_sensor");
 
         telemetry.addData("Color","R %d  G %d  B %d", colorSensor.red(), colorSensor.green(), colorSensor.blue());
-        //telemetry.addData("Heading"," %.1f", gyro.getHeading());
         Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         telemetry.addData("Heading", " %.1f", orientation.firstAngle * 180.0 / Math.PI);
         telemetry.addData("Front Distance", " %.1f", frontDistance.getDistance(DistanceUnit.CM));
@@ -153,6 +152,20 @@ public class AUTOTEST2 extends LinearOpMode {
         m4.setPower(p4);
     }
 
+    void runEnc() {
+        m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    void resetEnc() {
+        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
     void encDriveLess (double forward, double strafe, double rotate, double value) {
         setPower(strafe, forward, rotate);
         while (m1.getCurrentPosition() < value) {
@@ -166,6 +179,8 @@ public class AUTOTEST2 extends LinearOpMode {
         }
         setPower(0, 0, 0);
     }
+
+
 
 }
 
