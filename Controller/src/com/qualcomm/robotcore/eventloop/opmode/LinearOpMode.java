@@ -135,7 +135,7 @@ public abstract class LinearOpMode extends OpMode {
      * From the non-linear OpMode; do not override
      */
     @Override
-    final public void loop() {
+    public void loop() {
         handleLoop();
     }
 
