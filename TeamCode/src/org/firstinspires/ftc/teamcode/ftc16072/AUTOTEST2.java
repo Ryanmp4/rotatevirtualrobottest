@@ -53,16 +53,6 @@ public class AUTOTEST2 extends LinearOpMode {
         imu.initialize(parameters);
         colorSensor = hardwareMap.colorSensor.get("color_sensor");
 
-        telemetry.addData("Color","R %d  G %d  B %d", colorSensor.red(), colorSensor.green(), colorSensor.blue());
-        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        telemetry.addData("Heading", " %.1f", orientation.firstAngle * 180.0 / Math.PI);
-        telemetry.addData("Front Distance", " %.1f", frontDistance.getDistance(DistanceUnit.CM));
-        telemetry.addData("Left Distance", " %.1f", leftDistance.getDistance(DistanceUnit.CM));
-        telemetry.addData("Right Distance", " %.1f", rightDistance.getDistance(DistanceUnit.CM));
-        telemetry.addData("Back Distance", " %.1f", backDistance.getDistance(DistanceUnit.CM));
-        telemetry.addData("Encoders"," %d %d %d %d", m1.getCurrentPosition(), m2.getCurrentPosition(), m3.getCurrentPosition(), m4.getCurrentPosition());
-        telemetry.update();
-
         //commands to run in auto starts
 
         setPower(0, 1, 0);
@@ -165,22 +155,6 @@ public class AUTOTEST2 extends LinearOpMode {
         m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-
-    void encDriveLess (double forward, double strafe, double rotate, double value) {
-        setPower(strafe, forward, rotate);
-        while (m1.getCurrentPosition() < value) {
-        }
-        setPower(0, 0, 0);
-    }
-
-    void encDriveGreater (double forward, double strafe, double rotate, double value) {
-        setPower(strafe, forward, rotate);
-        while (m1.getCurrentPosition() > value) {
-        }
-        setPower(0, 0, 0);
-    }
-
-
 
 }
 
